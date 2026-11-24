@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#eff1ea">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Istanbul">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<title>Two days in Istanbul, Jan 2 to 4, 2027</title>
+<meta name="description" content="A two-night Istanbul stopover, Jan 2 to 4, 2027: where to stay, how to get around, and the food and sights worth the time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,0..100&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #eff1ea;
+    --paper-deep: #e3e7d9;
+    --ink: #1c2419;
+    --ink-soft: #4b5546;
+    --pistachio: #3e6b2e;
+    --pistachio-light: #a9c47f;
+    --copper: #b2672f;
+    --copper-deep: #8a4b1d;
+    --sumac: #8f2d3a;
+    --rule: #c9d0bc;
+    --display: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --body: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+    --measure: 66ch;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.5;
+  }
+  a { color: var(--copper-deep); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--copper); outline-offset: 3px; }
+
+  h1, h2, h3 {
+    font-family: var(--display);
+    font-weight: 400;
+    line-height: 1.05;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  h1 { font-size: clamp(2.4rem, 6vw, 4.6rem); font-variation-settings: "opsz" 144, "SOFT" 40; }
+  h2 { font-size: clamp(1.9rem, 3.6vw, 2.7rem); font-variation-settings: "opsz" 72, "SOFT" 30; margin-bottom: 0.6rem; }
+  h3 { font-size: 1.35rem; font-variation-settings: "opsz" 36; }
+  p { margin: 0 0 1em; max-width: var(--measure); }
+  .wrap { width: min(1080px, 100% - 2.5rem); margin-inline: auto; }
+  section { padding: 4.5rem 0; border-top: 1px solid var(--rule); }
+  .lede { font-size: 1.2rem; color: var(--ink-soft); }
+
+  /* hero */
+  header.hero { padding: 3.5rem 0 3rem; }
+  .hero-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; color: var(--ink-soft); }
+  .hero-top strong { color: var(--ink); font-weight: 600; }
+  .hero h1 { max-width: 16ch; margin-bottom: 1.25rem; }
+  .hero h1 em { font-style: italic; font-variation-settings: "opsz" 144, "SOFT" 100; color: var(--pistachio); }
+  .hero .lede { max-width: 52ch; font-size: 1.3rem; }
+
+  /* route rail */
+  .route { list-style: none; margin: 3rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); position: relative; }
+  .route::before {
+    content: ""; position: absolute; left: 4%; right: 33%; top: 11px; height: 0;
+    border-top: 2px dashed var(--copper);
+  }
+  .route li { position: relative; padding: 2rem 0.5rem 0 0; }
+  .route li::before {
+    content: ""; position: absolute; left: 0; top: 3px; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--paper); border: 2px solid var(--copper);
+  }
+  .route li.stay::before { background: var(--pistachio); border-color: var(--pistachio); width: 24px; height: 24px; top: 0; }
+  .route .code { font-family: var(--display); font-size: 2.2rem; line-height: 1; font-variation-settings: "opsz" 72; }
+  .route li.stay .code { color: var(--pistachio); font-size: 2.6rem; }
+  .route .city { display: block; font-weight: 600; margin-top: 0.3rem; }
+  .route .when { display: block; color: var(--ink-soft); font-size: 0.95rem; }
+  @media (max-width: 720px) {
+    .route { grid-template-columns: 1fr; gap: 0; }
+    .route::before { left: 11px; right: auto; top: 1rem; bottom: 1rem; height: auto; border-top: 0; border-left: 2px dashed var(--copper); }
+    .route li { padding: 0.4rem 0 1.4rem 2.6rem; }
+    .route li::before { left: 2px; top: 0.6rem; }
+    .route li.stay::before { left: -1px; top: 0.45rem; }
+  }
+
+  /* sticky day nav */
+  nav.days { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--paper) 92%, white); backdrop-filter: blur(6px); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  nav.days ul { list-style: none; margin: 0; padding: 0.6rem 0; display: flex; gap: 0.4rem; overflow-x: auto; scrollbar-width: none; }
+  nav.days a { display: block; white-space: nowrap; padding: 0.35rem 0.85rem; border-radius: 999px; border: 1px solid var(--rule); text-decoration: none; color: var(--ink); font-weight: 600; font-size: 0.95rem; }
+  nav.days a:hover { border-color: var(--pistachio); }
+  nav.days a.eat { color: var(--copper-deep); }
+
+  /* glance table */
+  table { border-collapse: collapse; width: 100%; font-size: 1rem; }
+  th, td { text-align: left; padding: 0.7rem 0.6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-weight: 600; color: var(--ink-soft); font-size: 0.9rem; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr.total td { font-weight: 600; border-bottom: 2px solid var(--ink); }
+  .table-scroll { overflow-x: auto; }
+  .table-scroll table { min-width: 640px; }
+
+  /* timeline */
+  .day { margin-top: 3rem; scroll-margin-top: 4rem; }
+  .day-head { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .day-head .date { font-family: var(--display); font-size: 1.1rem; color: var(--ink-soft); font-variation-settings: "opsz" 20; }
+  .day-head .where { color: var(--pistachio); font-weight: 600; }
+  .day-note { color: var(--ink-soft); max-width: var(--measure); margin-bottom: 1.2rem; }
+  ol.tl { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--rule); }
+  ol.tl li { display: grid; grid-template-columns: 5.5rem 1fr; gap: 0.75rem; padding: 0.75rem 0 0.75rem 1.25rem; position: relative; }
+  ol.tl li::before { content: ""; position: absolute; left: -6px; top: 1.25rem; width: 10px; height: 10px; border-radius: 50%; background: var(--rule); }
+  ol.tl li.fly::before { background: var(--ink); }
+  ol.tl li.eat::before { background: var(--copper); }
+  ol.tl .t { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink-soft); }
+  ol.tl .what { max-width: var(--measure); }
+  ol.tl .what strong { font-weight: 600; }
+  ol.tl li.eat .what strong { color: var(--copper-deep); }
+  ol.tl .cost { color: var(--ink-soft); white-space: nowrap; }
+  ol.tl .sub { display: block; color: var(--ink-soft); font-size: 0.95rem; margin-top: 0.15rem; }
+  @media (max-width: 520px) { ol.tl li { grid-template-columns: 1fr; gap: 0.1rem; } }
+
+  /* callouts */
+  .callout { background: var(--paper-deep); border-left: 4px solid var(--copper); padding: 1rem 1.25rem; margin: 1.5rem 0; max-width: calc(var(--measure) + 2.5rem); }
+  .callout.green { border-left-color: var(--pistachio); }
+  .callout.red { border-left-color: var(--sumac); }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* eat list */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem 2rem; margin-top: 1.5rem; }
+  .place h3 { margin-bottom: 0.25rem; }
+  .place .dish { color: var(--copper-deep); font-weight: 600; }
+  .place p { font-size: 0.98rem; margin: 0.3rem 0 0; }
+  .place .hours { color: var(--ink-soft); }
+
+  /* checklist */
+  ul.check { list-style: none; padding: 0; margin: 1rem 0 0; max-width: var(--measure); }
+  ul.check li { display: grid; grid-template-columns: 1.6rem 1fr; gap: 0.6rem; padding: 0.55rem 0; border-bottom: 1px solid var(--rule); align-items: start; }
+  ul.check input { width: 1.2rem; height: 1.2rem; margin-top: 0.25rem; accent-color: var(--pistachio); }
+  ul.check .by { color: var(--ink-soft); font-size: 0.92rem; display: block; }
+
+  footer { padding: 3rem 0 4rem; border-top: 1px solid var(--rule); color: var(--ink-soft); font-size: 0.95rem; }
+  footer p { max-width: var(--measure); }
+
+  /* map */
+  .map-top { display: flex; flex-wrap: wrap; gap: 0.8rem 1.5rem; align-items: center; justify-content: space-between; margin: 1.2rem 0 0.8rem; }
+  .chips { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .chips button { font: 600 0.95rem/1 var(--body); padding: 0.5rem 0.95rem; border-radius: 999px; border: 1px solid var(--rule); background: transparent; color: var(--ink); cursor: pointer; }
+  .chips button:hover { border-color: var(--pistachio); }
+  .chips button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .chips button:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+  .legend { display: flex; gap: 0.9rem 1.1rem; flex-wrap: wrap; font-size: 0.9rem; color: var(--ink-soft); }
+  .legend span::before { content: ""; display: inline-block; width: 0.75rem; height: 0.75rem; border-radius: 50%; margin-right: 0.4rem; vertical-align: -1px; }
+  .legend .eat::before { background: var(--copper); }
+  .legend .sight::before { background: var(--pistachio); }
+  .legend .move::before { background: var(--ink); }
+  .legend .stay::before { background: var(--sumac); border-radius: 2px; transform: rotate(45deg) scale(0.85); }
+  .legend .line::before { width: 1.1rem; height: 0; border-top: 2px solid var(--ink-soft); border-radius: 0; vertical-align: 3px; }
+  .legend .line.sun::before { border-top-style: dashed; }
+  .legend .line.mon::before { border-top-style: dotted; }
+  #leaflet-map { height: min(72vh, 640px); min-height: 420px; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper-deep); }
+  .leaflet-container { font-family: var(--body); }
+  .leaflet-tile-pane { filter: saturate(0.55) contrast(0.92) brightness(1.04); }
+  .pin { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; color: #fff; font: 700 12px/1 var(--body); border: 2px solid var(--paper); box-shadow: 0 1px 3px rgba(0,0,0,0.35); }
+  .pin.eat { background: var(--copper); }
+  .pin.sight { background: var(--pistachio); }
+  .pin.move { background: var(--ink); }
+  .pin.stay { background: var(--sumac); width: 30px; height: 30px; border-radius: 5px; transform: rotate(45deg); }
+  .pin.stay b { transform: rotate(-45deg); font-size: 13px; }
+  .leaflet-marker-icon.dim { opacity: 0.16; }
+  .leaflet-popup-content-wrapper { border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.18); }
+  .leaflet-popup-content { font-size: 0.95rem; line-height: 1.4; margin: 0.75rem 0.95rem; }
+  .leaflet-popup-content .when { display: block; font-weight: 600; color: var(--copper-deep); font-size: 0.85rem; }
+  .leaflet-popup-content .name { font-family: var(--display); font-size: 1.1rem; display: block; margin: 0.1rem 0 0.2rem; }
+  .leaflet-popup-content a { color: var(--pistachio); font-weight: 600; }
+  .go { display: block; margin-top: 0.35rem; font-size: 0.85rem; }
+  .go a { color: var(--pistachio); font-weight: 600; text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; margin-right: 0.9rem; }
+  .go a:hover { color: var(--copper-deep); }
+  .leaflet-popup-content .go { margin-top: 0.5rem; }
+  .leaflet-popup-content a.plan { display: block; margin-top: 0.3rem; font-size: 0.85rem; }
+  .place p.go { margin-top: 0.4rem; }
+  .map-note { font-size: 0.9rem; color: var(--ink-soft); margin-top: 0.7rem; }
+  @media (max-width: 720px) { #leaflet-map { height: clamp(400px, 62vh, 560px); } }
+  @media print {
+    #map { display: none; }
+    body { font-size: 11.5pt; background: white; }
+    nav.days { display: none; }
+    section { padding: 1.2rem 0; break-inside: avoid; }
+    .day { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-top">
+      <span><strong>Jan 2 to 4, 2027</strong>, in at 06:30 Saturday, out at 20:35 Monday</span>
+      <span>Solo. Two nights at The Bank Hotel, Karaköy.</span>
+    </div>
+    <h1>Two days in Istanbul, built around <em>the food worth eating</em> and the sights worth the time.</h1>
+    <p class="lede">You land at dawn on Saturday and fly out Monday evening, which is close to three full days. Base at The Bank in Karaköy, where both dinners are a walk from the door, cross the bridge for the Old City, and take the metro to the airport at 16:15 Monday. No tourist restaurants, no museum pass, nothing that needs a tour bus.</p>
+
+    <ol class="route">
+      <li><span class="code">MCO</span><span class="city">Orlando</span><span class="when">Fri Jan 1</span></li>
+      <li class="stay"><span class="code">IST</span><span class="city">Istanbul</span><span class="when">Sat Jan 2, land 06:30, to Mon Jan 4, 2 nights in Karaköy</span></li>
+      <li><span class="code">KHI</span><span class="city">Karachi</span><span class="when">Mon Jan 4, depart 20:35, land early Tue Jan 5</span></li>
+    </ol>
+  </div>
+</header>
+
+<nav class="days" aria-label="Jump to a day">
+  <div class="wrap">
+    <ul>
+      <li><a href="#glance">At a glance</a></li>
+      <li><a href="#closed">What's closed</a></li>
+      <li><a href="#map">Map</a></li>
+      <li><a href="#d1">Sat Old City</a></li>
+      <li><a href="#d2">Sun Across the water</a></li>
+      <li><a href="#d3">Mon Balat and out</a></li>
+      <li><a href="#book">Stay</a></li>
+      <li><a href="#before">Before you go</a></li>
+      <li><a href="#budget">Budget</a></li>
+      <li><a href="#eats" class="eat">Eat list</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section id="glance">
+  <div class="wrap">
+    <h2>The whole stop in one look</h2>
+    <p class="lede">Every time is Istanbul local, 8 hours ahead of Orlando. Sunrise is 08:28 and sunset 17:47, so the days are short and the mornings matter.</p>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Day</th><th>Where</th><th>The move</th><th>Why this order</th></tr></thead>
+      <tbody>
+        <tr><td>Sat Jan 2</td><td>Old City, then Beyoğlu for dinner</td><td>Land 06:30, taxi to The Bank, drop bags, Van breakfast in Cihangir, Blue Mosque, Hagia Sophia, büryan lunch in Fatih, boza at Vefa, Süleymaniye, Grand Bazaar, Spice Bazaar, künefe at Hatay Asi, nap, meyhane dinner at Asmalı Cavit, rooftop nightcap</td><td>Grand Bazaar is closed Sunday and Asmalı Cavit is closed Sunday. Both have to be today.</td></tr>
+        <tr><td>Sun Jan 3</td><td>Topkapı, Kadıköy, the Bosphorus, Karaköy</td><td>Su böreği at Güllüoğlu, Topkapı at opening, ferry to Kadıköy, market, Çiya Sofrası lunch, Baylan, the 14:40 Bosphorus boat from Eminönü, Galata Bridge at sunset, dinner at Ali Ocakbaşı</td><td>Everything on this day is open Sundays. The Bosphorus boat has one winter sailing.</td></tr>
+        <tr><td>Mon Jan 4</td><td>Balat, Chora, Karaköy, then the airport</td><td>Menemen at Lades, Balat and Fener walk, Chora mosaics, döner at Şahin Usta by the Grand Bazaar, box the baklava, coffee at Mandabatmaz, late checkout, metro to the airport at 16:15</td><td>Lades, Şahin Usta and Chora are open Mondays. Dolmabahçe is not, so it's not here.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section id="closed">
+  <div class="wrap">
+    <h2>What's closed when</h2>
+    <p class="lede">The plan is already built around these. This is here so nothing surprises you if you improvise.</p>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Place</th><th>Sat Jan 2</th><th>Sun Jan 3</th><th>Mon Jan 4</th></tr></thead>
+      <tbody>
+        <tr><td>Grand Bazaar</td><td>Open 08:30 to 19:00</td><td>Closed</td><td>Open 08:30 to 19:00</td></tr>
+        <tr><td>Spice Bazaar</td><td>Open to about 19:30</td><td>Open from about 09:30</td><td>Open to about 19:30</td></tr>
+        <tr><td>Topkapı Palace</td><td>Open 09:00 to 17:30</td><td>Open 09:00 to 17:30</td><td>Open 09:00 to 17:30</td></tr>
+        <tr><td>Hagia Sophia</td><td>Open 09:00 to 19:30</td><td>Open 09:00 to 19:30</td><td>Open 09:00 to 19:30</td></tr>
+        <tr><td>Chora, Kariye</td><td>Open</td><td>Open</td><td>Open</td></tr>
+        <tr><td>Dolmabahçe Palace</td><td>Open</td><td>Open</td><td>Closed</td></tr>
+        <tr><td>Asmalı Cavit</td><td>Open from 17:00</td><td>Closed</td><td>Open from 17:00</td></tr>
+        <tr><td>Lades Menemen</td><td>Open</td><td>Closed</td><td>Open from 06:00</td></tr>
+        <tr><td>Dönerci Şahin Usta, by the Grand Bazaar</td><td>Open to about 17:00, or sold out</td><td>Closed</td><td>Open to about 17:00, or sold out</td></tr>
+        <tr><td>Hatay Asi Künefeleri, by the Spice Bazaar</td><td>Open</td><td>Open</td><td>Open</td></tr>
+        <tr><td>Nato Lokantası, the backup lunch</td><td>Closed</td><td>Closed</td><td>Open, lunch only</td></tr>
+        <tr><td>Aynen Kebap, in the Grand Bazaar</td><td>Open to 18:00</td><td>Closed</td><td>Open to 18:00</td></tr>
+        <tr><td>Everything else on the eat list</td><td>Open</td><td>Open</td><td>Open</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="margin-top:1rem">Mosques close to visitors for about an hour around each prayer. During your dates: midday 13:13, afternoon 15:34, sunset 17:55.</p>
+  </div>
+</section>
+
+<section id="map">
+  <div class="wrap">
+    <h2>The map</h2>
+    <p class="lede">Every stop, numbered in the order of its day. Colour is what kind of stop it is. The line is the day's route: solid for Saturday, dashed for Sunday, dotted for Monday. Tap a pin for the time and a link back to its slot in the plan.</p>
+    <div class="map-top">
+      <div class="chips" role="group" aria-label="Show a day">
+        <button type="button" data-day="all" aria-pressed="true">All three days</button>
+        <button type="button" data-day="sat" aria-pressed="false">Sat Jan 2</button>
+        <button type="button" data-day="sun" aria-pressed="false">Sun Jan 3</button>
+        <button type="button" data-day="mon" aria-pressed="false">Mon Jan 4</button>
+      </div>
+      <div class="legend"><span class="eat">Eat</span><span class="sight">See</span><span class="move">Move</span><span class="stay">Sleep</span><span class="line sat">Sat</span><span class="line sun">Sun</span><span class="line mon">Mon</span></div>
+    </div>
+    <div id="leaflet-map" role="region" aria-label="Map of the itinerary"></div>
+    <p class="map-note">The airport is 35 km northwest and sits off the edge. Zoom out to see it. Pins are placed by address and can be a street off, so follow the name, not the dot, for the last fifty metres.</p>
+  </div>
+</section>
+
+<section id="days">
+  <div class="wrap">
+    <h2>Day by day</h2>
+    <p class="lede">Copper dots are meals. Black dots are transport. Prices are in US dollars at roughly 50 lira to the dollar. Restaurant prices in Istanbul move fast, treat them as plus or minus a quarter.</p>
+
+    <article class="day" id="d1">
+      <div class="day-head"><h3>Saturday, land at dawn and take the Old City</h3><span class="date">January 2</span><span class="where">Karaköy, Cihangir, Sultanahmet, Fatih, Beyoğlu</span></div>
+      <p class="day-note">The long day. You'll be running on airplane sleep, so the plan front-loads the big sights while you're still adrenalized, builds in a nap at six, and ends with the one dinner that can't move.</p>
+      <ol class="tl">
+        <li class="fly"><span class="t">06:30</span><span class="what"><strong>Land Istanbul.</strong> Passport control, no visa on a US passport, collect your bag. Buy an Istanbulkart at the kiosk by the M11 metro entrance, card about $3.50, load 300 lira. <span class="sub">Early Saturday is the one time the roads are empty, so a taxi makes sense today.</span></span></li>
+        <li class="fly"><span class="t">07:30</span><span class="what"><strong>Taxi to The Bank Hotel</strong>, Bankalar Caddesi, Karaköy, from the official rank at arrivals, orange cars. 45 minutes at this hour. Pay by card. <span class="cost">about $45 to 50</span><span class="sub">Metro alternative: M11 to Gayrettepe, M2 to Şişhane, 10 minutes downhill on foot. About 70 minutes, $2.</span></span></li>
+        <li><span class="t">08:20</span><span class="what"><strong>Check in, or drop bags.</strong> Your card's early check-in is "if available", so email the hotel the week before with the 06:30 landing. In January they'll usually have the room. Shower if it's ready, otherwise freshen up and go.</span></li>
+        <li class="eat"><span class="t">09:15</span><span class="what"><strong>Van Kahvaltı Evi</strong>, Cihangir, a 15-minute walk uphill. The Kurdish breakfast spread: otlu peynir herb cheese, kavut, honey and kaymak, menemen, endless tea. Saturday queues form after 09:30, so you're just ahead of it. <span class="cost">about $15</span><span class="sub">The hotel breakfast is free with your card, but this is the one that's worth the walk. Save the hotel's for a coffee.</span></span></li>
+        <li><span class="t">10:45</span><span class="what"><strong>Tram to Sultanahmet.</strong> T1 from Tophane, 15 minutes.</span></li>
+        <li><span class="t">11:00</span><span class="what"><strong>Blue Mosque.</strong> Free. It closes around each prayer and the midday prayer is 13:13, so go now. Shoes off, knees and shoulders covered, scarves provided.</span></li>
+        <li><span class="t">11:45</span><span class="what"><strong>Hagia Sophia.</strong> The visitor route is the upper gallery, entered on the northeast side opposite the Ahmed III fountain. In January the queue is minutes. Bring a layer, the gallery is unheated stone. <span class="cost">about $28</span><span class="sub">Basilica Cistern is next door at about $39 if you have energy, but it's the first thing to drop. Monday has a slot for it too.</span></span></li>
+        <li class="eat"><span class="t">13:30</span><span class="what"><strong>Siirt Şeref Büryan</strong>, Kadınlar Pazarı, Fatih. Tram to Aksaray and a 10-minute walk, or 25 minutes on foot. Büryan, lamb pit-roasted in a sealed oven, and perde pilavı, rice baked inside a pastry veil. The square is lined with Siirt and Bitlis places, this is the original. <span class="cost">about $15</span></span></li>
+        <li class="eat"><span class="t">14:45</span><span class="what"><strong>Vefa Bozacısı</strong>, a 10-minute walk, open since 1876. Boza is fermented millet, thick and tart, with roasted chickpeas on top. January is its season. Cash. <span class="cost">about $3</span></span></li>
+        <li><span class="t">15:00</span><span class="what"><strong>Süleymaniye Mosque</strong>, five minutes up the hill. Sinan's masterpiece, free, calmer than the Blue Mosque, and the terrace has the best view of the Golden Horn. Afternoon prayer is 15:34, so be in by 15:05 and out by 15:25, or see the terrace first and the interior after 16:15.</span></li>
+        <li><span class="t">15:45</span><span class="what"><strong>Grand Bazaar</strong>, a 15-minute walk down through the book market at Beyazıt. Open until 19:00 today, closed tomorrow, so this is the visit. Go in at Beyazıt, drift toward the old bedesten in the middle, and ignore anyone who opens with where you're from. <span class="sub">Snack if you want one: a dürüm at Aynen Kebap inside the bazaar, where the shopkeepers eat, about $7. Dönerci Şahin Usta is just outside the Nuruosmaniye gate and usually sells out by 17:00, so if you're there by 16:30 and hungry, that's the döner. Otherwise it's Monday's lunch. If you run out of time or energy, the bazaar is also open Monday morning, and the page has a fallback for that.</span></span></li>
+        <li><span class="t">17:00</span><span class="what"><strong>Spice Bazaar</strong>, 15 minutes downhill, then Rüstem Paşa Mosque next door for the İznik tiles. Coffee beans from Kurukahveci Mehmet Efendi on the corner. Open every day, so if the Grand Bazaar ran long, this can slide to Sunday or Monday.</span></li>
+        <li class="eat"><span class="t">17:20</span><span class="what"><strong>Hatay Asi Künefeleri</strong>, Hasırcılar Caddesi 27, the lane running west from the Spice Bazaar, two minutes away. Künefe the Hatay way: shredded pastry, unsalted cheese brought from Hatay, butter, syrup, pistachio, served when the cheese still pulls. <span class="cost">about $7</span><span class="sub">Lezzet-i Şark Antep Sofrası at number 38 on the same lane does a lighter-syrup version if Asi is full.</span></span></li>
+        <li><span class="t">17:50</span><span class="what"><strong>Walk home over the Galata Bridge</strong> as the light goes, sunset is 17:47, 12 minutes to the hotel. <strong>Nap.</strong> Ninety minutes, alarm set. This is what makes dinner work.</span></li>
+        <li class="eat"><span class="t">19:45</span><span class="what"><strong>Asmalı Cavit</strong>, Asmalımescit, Beyoğlu. Tünel funicular up from Karaköy, five minutes from the hotel, then a short walk. The classic meyhane: cold mezes, then hot ones, then grilled fish or lamb, with rakı. Closed Sundays, packed on weekdays, so reserve for tonight. <span class="cost">about $35 to 45 with rakı</span><span class="sub">Backup: Zübeyir Ocakbaşı, a 10-minute walk, still a top grill but pricier and more touristy than it was.</span></span></li>
+        <li class="eat"><span class="t">21:45</span><span class="what"><strong>Mandabatmaz</strong>, Olivya Geçidi off İstiklal. The city's consensus Turkish coffee, thick enough that the proverbial buffalo won't sink. Then Tünel down. <span class="cost">about $3</span><span class="sub">Still want a second künefe? Keyfeder Künefe Katmer, Çukurlu Çeşme Sokak off İstiklal, is open until 02:00.</span></span></li>
+        <li class="eat"><span class="t">22:30</span><span class="what"><strong>The Bank's rooftop bar</strong>, one drink looking at the Golden Horn, on the $100 property credit. Bed.</span></li>
+      </ol>
+    </article>
+
+    <article class="day" id="d2">
+      <div class="day-head"><h3>Sunday, the palace, then across the water</h3><span class="date">January 3</span><span class="where">Karaköy, Topkapı, Kadıköy, the Bosphorus</span></div>
+      <p class="day-note">Topkapı first thing, before the tour groups. Then Kadıköy, where Istanbul eats on its own time, and the public ferry's own Bosphorus boat in the afternoon light. Grand Bazaar and the meyhane are closed today, which is why they were yesterday.</p>
+      <ol class="tl">
+        <li class="eat"><span class="t">07:45</span><span class="what"><strong>Karaköy Güllüoğlu</strong>, two minutes from the hotel. What locals come for at breakfast: su böreği, the layered water pastry with cheese, and tea. Opens around 07:00. <span class="cost">about $8</span><span class="sub">Fallback if you oversleep: the hotel breakfast, free with your card.</span></span></li>
+        <li><span class="t">08:30</span><span class="what"><strong>Tram to Gülhane.</strong> T1 from Karaköy, three stops, 10 minutes, then five minutes through the park to the palace gate.</span></li>
+        <li><span class="t">09:00</span><span class="what"><strong>Topkapı Palace with the Harem and Hagia Irene.</strong> Be at the gate at opening. Two hours. The Harem is the part worth the add-on. <span class="cost">about $55</span><span class="sub">Skip the Museum Pass. At $115 it doesn't pay back for this itinerary.</span></span></li>
+        <li class="fly"><span class="t">11:15</span><span class="what"><strong>Ferry Eminönü to Kadıköy.</strong> Ten minutes' walk to the pier, 20 minutes across, Istanbulkart. Tea on board from the cart. <span class="cost">about $1.30</span></span></li>
+        <li class="eat"><span class="t">11:50</span><span class="what"><strong>Kadıköy market</strong>, Güneşlibahçe Sokak: the fish stalls, the pickle shops, the olive men. Turkish coffee at <strong>Fazıl Bey</strong>, then stuffed mussels at <strong>Midyeci Yasin</strong> on Moda Caddesi, eaten standing. <span class="cost">about $7 for both</span></span></li>
+        <li class="eat"><span class="t">12:30</span><span class="what"><strong>Çiya Sofrası</strong>, Güneşlibahçe Sokak 43. Point at the pots: Gaziantep yuvalama, stuffed artichokes, lamb with quince, whatever the kitchen has from the southeast that day. No alcohol. The one restaurant that cooks the whole of Anatolia under one roof. <span class="cost">about $18</span><span class="sub">Alternative: Yanyalı Fehmi, since 1919, new Bib Gourmand in the 2026 guide, for esnaf stews and rice. About $20.</span></span></li>
+        <li class="eat"><span class="t">13:30</span><span class="what"><strong>Baylan</strong>, Muvakkithane Caddesi. Kup griye, the caramel, ice cream and almond sundae this 1923 patisserie invented. <span class="cost">about $10</span></span></li>
+        <li class="fly"><span class="t">14:00</span><span class="what"><strong>Ferry Kadıköy to Eminönü</strong>, 20 minutes, to make the boat below.</span></li>
+        <li class="fly"><span class="t">14:40</span><span class="what"><strong>Şehir Hatları Short Bosphorus Tour</strong> from Eminönü. Two hours up past Dolmabahçe, Ortaköy, the bridges and the Rumeli fortress, back at 16:35 in the last of the light. The public ferry line's own tour, not a tout's boat. The only winter sailing, so don't miss the 14:00 ferry. <span class="cost">about $7</span></span></li>
+        <li><span class="t">16:45</span><span class="what"><strong>Walk the Galata Bridge</strong> lower deck past the fishermen as the sun sets at 17:47, then through the Karaköy fish market to the hotel. <span class="sub">Galata Tower is a 7-minute climb from the hotel if you want the view, about $34, last daytime ticket 18:14. Optional.</span></span></li>
+        <li class="eat"><span class="t">19:30</span><span class="what"><strong>Ali Ocakbaşı Karaköy</strong>, Kardeşim Sokak 45, a hidden lane off Tersane Caddesi, five minutes from the hotel. Bib Gourmand two years running. Sit at the counter in front of the charcoal. This is your Adana: hand-minced lamb on the wide skewer, served on lavaş with grilled onions and pomegranate, then lamb şiş and chicken wings if you have room. Reserve. <span class="cost">about $35 to 45</span><span class="sub">Beware the copycat on the waterfront called Chef Ocakbaşı. Quieter alternative: Karaköy Lokantası, the turquoise-tiled Bib Gourmand, open Sundays from 16:00, about $30.</span></span></li>
+        <li><span class="t">21:30</span><span class="what"><strong>Walk home</strong>, five minutes. Rooftop if there's credit left.</span></li>
+      </ol>
+    </article>
+
+    <article class="day" id="d3">
+      <div class="day-head"><h3>Monday, Balat, the döner, and out</h3><span class="date">January 4</span><span class="where">Beyoğlu, Balat and Fener, Karaköy, then the airport</span></div>
+      <p class="day-note">The 20:35 flight gives you the whole day. Ask for late checkout with your card and leave the bags until 16:00. Monday is the day for the city's best döner, which is shut Sundays, and the one neighborhood the other days didn't reach.</p>
+      <ol class="tl">
+        <li class="eat"><span class="t">08:00</span><span class="what"><strong>Lades Menemen</strong>, Sadri Alışık Sokak just off İstiklal, Tünel up and a five-minute walk. Menemen, eggs scrambled slowly with tomato and pepper, with bread for mopping. Closed Sundays, open today from 06:00. <span class="cost">about $7</span></span></li>
+        <li class="fly"><span class="t">09:15</span><span class="what"><strong>To Balat.</strong> Taxi from Tünel, 15 minutes, or Tünel down and the T5 tram from Eminönü to Fener, 30 minutes. <span class="cost">about $8 by taxi</span></span></li>
+        <li><span class="t">09:30</span><span class="what"><strong>Fener and Balat on foot.</strong> The Greek Orthodox Patriarchate at St George, the red-brick Phanar Greek College on the hill, the painted houses on Kiremit Caddesi, the Bulgarian Iron Church on the water. Ninety minutes, mostly uphill and down.</span></li>
+        <li><span class="t">11:00</span><span class="what"><strong>Chora, the Kariye Mosque</strong>, 15 minutes' walk or a 5-minute taxi up to Edirnekapı. The finest Byzantine mosaics and frescoes in the city, reopened in 2024. Open Mondays, closed Fridays. <span class="cost">about $22</span><span class="sub">Swap: if you'd rather, the Basilica Cistern in Sultanahmet, about $39, or a second pass at the Grand Bazaar, open today from 08:30, 15 minutes by tram from the hotel.</span></span></li>
+        <li class="fly"><span class="t">12:15</span><span class="what"><strong>Taxi to Nuruosmaniye</strong>, 15 minutes back toward the Grand Bazaar. <span class="cost">about $8</span></span></li>
+        <li class="eat"><span class="t">12:30</span><span class="what"><strong>Dönerci Şahin Usta</strong>, Kılıççılar Sokak 7, Nuruosmaniye, a few steps from the Grand Bazaar's Nuruosmaniye gate. Lamb döner stacked by hand and cut thin, in bread or on a plate with rice, with a glass of ayran. Standing room and a short queue at this hour. Closed Sundays, and gone when the spit is gone, usually by 17:00. <span class="cost">about $8</span><span class="sub">Backups: Nato Lokantası in Karaköy for the weekday tradesman's stews, by 13:00, about $10. Or Karadeniz Döner in Beşiktaş, the other famous spit, a 10-minute taxi from the hotel, lunch only.</span></span></li>
+        <li><span class="t">13:10</span><span class="what"><strong>Grand Bazaar, second pass</strong> if Saturday ran short, you're at the gate. Otherwise T1 tram from Çemberlitaş to Karaköy, 15 minutes.</span></li>
+        <li class="eat"><span class="t">13:45</span><span class="what"><strong>Karaköy Güllüoğlu.</strong> Box a kilo of baklava for Karachi, and a last slice with tea. Order fıstıklı, the pistachio, and ask for it with kaymak. <span class="cost">about $6, plus $45 for the box</span></span></li>
+        <li class="eat"><span class="t">14:30</span><span class="what"><strong>Mandabatmaz</strong> one more time, Tünel up, or the hotel rooftop for a coffee on whatever credit is left. Istanbul Modern is three minutes from the hotel if you want an hour indoors.</span></li>
+        <li><span class="t">15:45</span><span class="what"><strong>Collect the bags.</strong> Baklava flat in the carry-on.</span></li>
+        <li class="fly"><span class="t">16:15</span><span class="what"><strong>Metro to the airport.</strong> Ten minutes uphill to Şişhane, or Tünel up and a three-minute walk. M2 to Gayrettepe, M11 to the airport. About 70 minutes, immune to the evening rush. <span class="cost">about $2</span><span class="sub">Taxi from the hotel at 16:15 is 60 to 90 minutes in Monday traffic, about $50. Only better if the metro feels like too much with bags.</span></span></li>
+        <li><span class="t">17:30</span><span class="what"><strong>Istanbul Airport.</strong> Check-in closes 60 minutes before departure. Passport exit stamp, security. The iGA Lounge sells 3-hour passes for about $60 if you want a shower before the flight.</span></li>
+        <li class="fly"><span class="t">20:35</span><span class="what"><strong>Fly to Karachi</strong>, about 5 h 15 m, plus 2 hours of time change. Lands around 04:00 Tuesday.</span></li>
+      </ol>
+      <div class="callout red">
+        <p>If the Karachi flight leaves from Sabiha Gökçen on the Asian side rather than Istanbul Airport, the run is different: ferry to Kadıköy and the M4 metro to the airport, about 75 minutes, or a taxi of 60 to 90 minutes. Check the airport code on the ticket.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="book">
+  <div class="wrap">
+    <h2>Where to stay, and why</h2>
+    <p class="lede">The Bank Hotel in Karaköy, booked through Chase Travel so the Sapphire Reserve Edit benefits attach: breakfast for two, a $100 property credit, early check-in and late checkout if available, and a room upgrade if available.</p>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Hotel</th><th>Why</th><th class="num">Per night, Jan</th></tr></thead>
+      <tbody>
+        <tr><td>The Bank Hotel, the pick</td><td>Five-star design hotel in an 1863 bank building on Bankalar Caddesi. Two minutes from the Karaköy tram, the ferries and Güllüoğlu, five from Ali Ocakbaşı and the Tünel up to Beyoğlu, ten uphill to the airport metro. The rooftop bar is the thing people remember. Rooms are stylish rather than big.</td><td class="num">$170 to 230, less the $100 credit over the stay</td></tr>
+        <tr><td>Sirkeci Mansion, the alternative</td><td>Old-school hospitality in the Old City, breakfast included, 10 minutes on foot to Topkapı and Hagia Sophia. Compact rooms, no card benefits. Choose it if The Bank's rate jumps.</td><td class="num">$95 to 140</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout">
+      <p>Three things to do when booking: compare the Chase Travel rate against the hotel's own, since Edit rates sometimes run higher than direct and the benefits are worth roughly $140 over two nights; email the hotel the week before with the 06:30 landing and ask for both early check-in and a 16:00 late checkout; and plan the $100 credit for the rooftop bar, since it's per stay, not per night.</p>
+    </div>
+    <div class="callout green">
+      <p>Reservations to make now: Asmalı Cavit for Saturday night and Ali Ocakbaşı Karaköy for Sunday night. Both fill, both are the dinner of their day.</p>
+    </div>
+  </div>
+</section>
+
+<section id="before">
+  <div class="wrap">
+    <h2>Before you go</h2>
+    <p class="lede">The Pakistan visa is the only item with a real deadline. Everything else is a week-of job.</p>
+    <ul class="check">
+      <li><input type="checkbox" id="c1"><label for="c1"><strong>Pakistan e-visa.</strong> Apply at visa.nadra.gov.pk by December 1. Standard processing is 7 to 10 working days, longer over the holidays. Single-entry tourist is reported at about $60 for US passports, confirm on the portal. The free visa-on-arrival that existed in 2025 was suspended January 2026. A valid NICOP or Pakistan Origin Card replaces this, but an expired card now gets you denied boarding under the July 2026 rule, so check the date on it today.<span class="by">By Dec 1</span></label></li>
+      <li><input type="checkbox" id="c2"><label for="c2"><strong>Turkey visa: none needed on a US passport.</strong> The e-visa for Americans was abolished in December 2023. Ignore any site still selling it. On a Pakistani passport you would need a Turkey e-visa, which a valid US visa or green card unlocks online.<span class="by">Nothing to do, unless on a Pakistani passport</span></label></li>
+      <li><input type="checkbox" id="c3"><label for="c3"><strong>Passport valid past July 2027.</strong> Turkey wants 150 days from entry, Pakistan wants 6 months, airlines apply the stricter one.<span class="by">Check now</span></label></li>
+      <li><input type="checkbox" id="c4"><label for="c4"><strong>Book The Bank through Chase Travel, then the two dinners.</strong><span class="by">Now</span></label></li>
+      <li><input type="checkbox" id="c5"><label for="c5"><strong>Install the eSIM before you leave the US.</strong> Turkey has blocked the websites and activation servers of Airalo, Holafly, Saily and most foreign eSIM sellers since mid-2025. An eSIM installed and activated at home keeps working, but you can't buy or top up once you land. Airalo's 7-day unlimited plan is about $25.<span class="by">Dec 30</span></label></li>
+      <li><input type="checkbox" id="c6"><label for="c6"><strong>Cash plan.</strong> Cards work almost everywhere, including the metro gates and app taxis. Carry a little lira for simit carts, boza, markets and tips. Halkbank and PTT ATMs are the ones that don't charge. Always decline the ATM's own conversion rate and pay in lira. Tip 5 to 10 percent in cash at sit-down places.<span class="by">On arrival</span></label></li>
+      <li><input type="checkbox" id="c7"><label for="c7"><strong>Download Istanbul offline in Google Maps</strong> and Turkish in Google Translate. Install BiTaksi for the taxi from the airport and the Monday hops.<span class="by">Dec 30</span></label></li>
+      <li><input type="checkbox" id="c8"><label for="c8"><strong>Pack for wet cold.</strong> Early January in Istanbul: highs around 8°C, lows around 5, rain on half the days, wind off the Bosphorus. Waterproof coat, shoes with grip for wet marble, an umbrella, a scarf you can use for mosques. Daylight is 08:28 to 17:47.<span class="by">Dec 31</span></label></li>
+      <li><input type="checkbox" id="c9"><label for="c9"><strong>Mosque rules.</strong> Shoes off, knees and shoulders covered, hair covered for women. Avoid the prayer windows: midday 13:13, afternoon 15:34, sunset 17:55 during your dates.<span class="by">Know it</span></label></li>
+      <li><input type="checkbox" id="c10"><label for="c10"><strong>Sleep on the plane.</strong> You land at 06:30 and go straight into the longest day. Eat early on board, then sleep. On the ground, daylight and the nap at 17:45 do the rest.<span class="by">Jan 1</span></label></li>
+    </ul>
+    <div class="callout">
+      <p>Safety, plainly: the US advisory for Turkey is Level 2, the same as much of Europe. Istanbul's risks are the ordinary ones. Pickpockets on packed trams and in the Grand Bazaar, the shoe-shine brush drop on Galata Bridge, the friendly stranger near Taksim who invites you for a drink, and taxis taking the long way. Pay taxis by card, stay out of demonstrations, and don't post anything political while you're there. Emergency number is 112.</p>
+    </div>
+  </div>
+</section>
+
+<section id="budget">
+  <div class="wrap">
+    <h2>Budget on the ground</h2>
+    <p class="lede">Flights excluded since you have them. Two nights at The Bank, every meal and sight on this page, and getting around.</p>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Item</th><th class="num">Low</th><th class="num">High</th></tr></thead>
+      <tbody>
+        <tr><td>Hotel, 2 nights at The Bank, breakfast included</td><td class="num">$340</td><td class="num">$460</td></tr>
+        <tr><td>Rooftop drinks, covered by the $100 property credit</td><td class="num">$0</td><td class="num">$0</td></tr>
+        <tr><td>Food, Saturday breakfast to Monday baklava</td><td class="num">$170</td><td class="num">$230</td></tr>
+        <tr><td>Sights: Hagia Sophia, Topkapı, Bosphorus boat, Chora</td><td class="num">$112</td><td class="num">$112</td></tr>
+        <tr><td>Galata Tower or Basilica Cistern, optional</td><td class="num">$0</td><td class="num">$73</td></tr>
+        <tr><td>Taxi from the airport, Monday taxis, Istanbulkart, trams, ferries, metro out</td><td class="num">$75</td><td class="num">$90</td></tr>
+        <tr><td>Baklava to carry to Karachi, 1 kg</td><td class="num">$40</td><td class="num">$50</td></tr>
+        <tr><td>Pakistan e-visa, if needed</td><td class="num">$60</td><td class="num">$60</td></tr>
+        <tr><td>eSIM, 7 days</td><td class="num">$25</td><td class="num">$25</td></tr>
+        <tr><td>Airport lounge on the way out, optional</td><td class="num">$0</td><td class="num">$60</td></tr>
+        <tr class="total"><td>Total</td><td class="num">$820</td><td class="num">$1,160</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section id="eats">
+  <div class="wrap">
+    <h2>The eat list</h2>
+    <p class="lede">Every place on the itinerary, with the hour and the closed day that matter. Hours come from listings that disagree with each other, so call the two reservations and treat the rest as close enough.</p>
+    <div class="callout green">
+      <p><strong>Your list, placed.</strong> Döner is Monday lunch at Şahin Usta, with Saturday as a bonus if you reach the bazaar early. Künefe is Saturday at Hatay Asi, beside the Spice Bazaar. Baklava is Güllüoğlu, Sunday breakfast and a Monday box. Adana is Sunday night at the Ali Ocakbaşı counter.</p>
+      <p><strong>Balon dürüm</strong> isn't in Istanbul. It belongs to the southeast, and nothing in the city that checked out serves it. The Değirmencioğlu names that come up here are unrelated: an ocakbaşı in Fenerbahçe that looks closed, a dürümcü in Güngören with poor reviews, and a tradesman's canteen in Sultanahmet. None is worth an hour in transit. Save it for a trip that goes to the source.</p>
+    </div>
+    <div class="grid">
+      <div class="place"><h3>Dönerci Şahin Usta</h3><span class="dish">Lamb döner</span><p>Kılıççılar Sokak 7, Nuruosmaniye, outside the Grand Bazaar's Nuruosmaniye gate. The döner the city argues about least.</p><p class="hours">Mon to Sat about 10:00 to 17:00, or until sold out. Closed Sunday. About $8.</p></div>
+      <div class="place"><h3>Hatay Asi Künefeleri</h3><span class="dish">Künefe</span><p>Hasırcılar Caddesi 27, Tahtakale, two minutes from the Spice Bazaar. Hatay cheese, served hot.</p><p class="hours">Daily, roughly 09:00 to 22:00. About $7.</p></div>
+      <div class="place"><h3>Asmalı Cavit</h3><span class="dish">Meyhane, mezes and rakı</span><p>Asmalımescit, Beyoğlu. The classic meyhane, loud and old-school.</p><p class="hours">Mon to Sat 17:00 to midnight. Closed Sunday. Reserve. About $35 to 45.</p></div>
+      <div class="place"><h3>Ali Ocakbaşı Karaköy</h3><span class="dish">Charcoal grill</span><p>Kardeşim Sokak 45, a lane off Tersane Caddesi. Bib Gourmand 2025 and 2026. Not the waterfront copycat.</p><p class="hours">Daily 12:00 to 23:00. Reserve. About $35 to 45.</p></div>
+      <div class="place"><h3>Çiya Sofrası</h3><span class="dish">Anatolian stews</span><p>Güneşlibahçe Sokak 43, Kadıköy. The whole southeast in one kitchen. No alcohol.</p><p class="hours">Daily 11:30 to 22:00. About $18.</p></div>
+      <div class="place"><h3>Van Kahvaltı Evi</h3><span class="dish">Kurdish breakfast</span><p>Defterdar Yokuşu, Cihangir. Herb cheese, kaymak, menemen, tea.</p><p class="hours">Daily 08:00 to 17:00. Before 09:30 on weekends. About $15.</p></div>
+      <div class="place"><h3>Karaköy Güllüoğlu</h3><span class="dish">Su böreği, baklava</span><p>Mumhane Caddesi, two minutes from the hotel. Börek for breakfast, baklava to carry.</p><p class="hours">Daily, about 07:00 to 23:00. About $8 for breakfast, $45 a kilo.</p></div>
+      <div class="place"><h3>Lades Menemen</h3><span class="dish">Menemen</span><p>Sadri Alışık Sokak, just off İstiklal. One dish, done right since 1968.</p><p class="hours">Mon to Sat 06:00 to 23:00. Closed Sunday. About $7.</p></div>
+      <div class="place"><h3>Siirt Şeref Büryan</h3><span class="dish">Büryan, perde pilavı</span><p>Kadınlar Pazarı, Fatih. Pit-roasted lamb and rice baked in pastry.</p><p class="hours">Daily, roughly 10:00 to 22:00. About $15.</p></div>
+      <div class="place"><h3>Nato Lokantası</h3><span class="dish">Tradesman's lunch, the backup</span><p>Karaköy. One room, the day's stews, gone when they're gone. Monday's alternative if you'd rather skip the döner.</p><p class="hours">Weekdays only, about 10:30 to 16:00. Go by 13:00. About $10.</p></div>
+      <div class="place"><h3>Vefa Bozacısı</h3><span class="dish">Boza</span><p>Vefa, near Süleymaniye. Since 1876.</p><p class="hours">Daily 08:00 to midnight. Cash. About $3.</p></div>
+      <div class="place"><h3>Mandabatmaz</h3><span class="dish">Turkish coffee</span><p>Olivya Geçidi, off İstiklal. The city's consensus cup.</p><p class="hours">Daily about 09:30 to midnight. About $3.</p></div>
+      <div class="place"><h3>Baylan</h3><span class="dish">Kup griye</span><p>Muvakkithane Caddesi, Kadıköy. 1923 patisserie, invented the sundae it's known for.</p><p class="hours">Daily about 07:00 to 22:00. About $10.</p></div>
+      <div class="place"><h3>Fazıl Bey and Midyeci Yasin</h3><span class="dish">Coffee, stuffed mussels</span><p>Serasker Caddesi and Moda Caddesi, Kadıköy market.</p><p class="hours">Daily, all day. About $3 and $4.</p></div>
+      <div class="place"><h3>Aynen Kebap</h3><span class="dish">Dürüm</span><p>Inside the Grand Bazaar. Where the shopkeepers eat. The optional Saturday snack.</p><p class="hours">Mon to Sat 11:00 to 18:00. Closed with the bazaar on Sunday. About $7.</p></div>
+      <div class="place"><h3>Backups</h3><span class="dish">If a plan falls through</span><p>Yanyalı Fehmi in Kadıköy for esnaf stews, new Bib Gourmand. Karaköy Lokantası, Sundays from 16:00. Zübeyir Ocakbaşı in Beyoğlu for the grill. Hayvore in Beyoğlu for Black Sea cooking any day. Karadeniz Döner in Beşiktaş for the other great spit, lunch, Mon to Sat. Keyfeder Künefe Katmer off İstiklal for künefe until 02:00.</p></div>
+      <div class="place"><h3>Skip these</h3><span class="dish">Not worth your days</span><p>Hamdi at Eminönü sells the view. Pandeli is a beautiful room with ordinary food. Hacı Abdullah and Kanaat have slipped. The Eminönü fish-sandwich boats are theater with Norwegian mackerel. Şampiyon Kokoreç is a chain now.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Researched October 2026 from Istanbul Airport and İBB transit pages, Ministry of Culture ticket pages, the Michelin Guide Istanbul 2026, Culinary Backstreets, and 2025 to 2026 reviews. Lira prices move fast with Turkish inflation near 30 percent, dollar figures should hold. Re-check the Pakistan e-visa fee and the two dinner reservations two weeks out. The earlier version with three nights in Gaziantep is kept at <a href="gaziantep.html">gaziantep.html</a>.</p>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+(function () {
+  if (!window.L) { document.getElementById('leaflet-map').innerHTML = '<p style="padding:1rem">The map needs a connection the first time it loads.</p>'; return; }
+  var HOTEL = { type: 'stay', name: 'The Bank Hotel', q: 'The Bank Hotel Istanbul, Bankalar Caddesi', note: 'Bankalar Caddesi, Karaköy. Both nights. Rooftop bar for the $100 credit.', lat: 41.0239, lng: 28.9737, href: '#book' };
+  var STOPS = {
+    sat: [
+      { t: '09:15', type: 'eat',   name: 'Van Kahvaltı Evi', q: 'Van Kahvaltı Evi, Cihangir',            note: 'Kurdish breakfast in Cihangir, 15 minutes uphill from the hotel.', lat: 41.0309, lng: 28.9825 },
+      { t: '10:45', type: 'move',  name: 'T1 tram from Tophane', q: 'Tophane tramvay durağı',        note: 'To Sultanahmet, 15 minutes.', lat: 41.0268, lng: 28.9798 },
+      { t: '11:00', type: 'sight', name: 'Blue Mosque', q: 'Sultan Ahmet Camii',                 note: 'Free. In before the 13:13 prayer.', lat: 41.0054, lng: 28.9768 },
+      { t: '11:45', type: 'sight', name: 'Hagia Sophia', q: 'Ayasofya',                note: 'Upper gallery, about $28.', lat: 41.0086, lng: 28.9802 },
+      { t: '13:30', type: 'eat',   name: 'Siirt Şeref Büryan', q: 'Siirt Şeref Büryan Kebap Salonu, Kadınlar Pazarı',          note: 'Büryan lamb and perde pilavı at Kadınlar Pazarı.', lat: 41.0169, lng: 28.9545 },
+      { t: '14:45', type: 'eat',   name: 'Vefa Bozacısı', q: 'Vefa Bozacısı',               note: 'Boza, since 1876. Cash.', lat: 41.0154, lng: 28.9604 },
+      { t: '15:00', type: 'sight', name: 'Süleymaniye Mosque', q: 'Süleymaniye Camii',          note: 'Out by 15:25 for the prayer, or interior after 16:15.', lat: 41.0160, lng: 28.9640 },
+      { t: '15:45', type: 'sight', name: 'Grand Bazaar', q: 'Kapalıçarşı Beyazıt kapısı',                note: 'Closed tomorrow, so today. Open to 19:00. Şahin Usta döner at the Nuruosmaniye gate if before 16:30.', lat: 41.0107, lng: 28.9680 },
+      { t: '17:00', type: 'sight', name: 'Spice Bazaar and Rüstem Paşa', q: 'Mısır Çarşısı', note: 'Coffee beans at Mehmet Efendi on the corner.', lat: 41.0166, lng: 28.9705 },
+      { t: '17:20', type: 'eat',   name: 'Hatay Asi Künefeleri', q: 'Hatay Asi Künefeleri, Hasırcılar Caddesi',        note: 'Künefe, Hasırcılar Caddesi 27, two minutes west of the Spice Bazaar.', lat: 41.0172, lng: 28.9692 },
+      { t: '17:50', type: 'move',  name: 'Galata Bridge, walk home', q: 'Galata Köprüsü',    note: 'Sunset 17:47. Then the nap.', lat: 41.0200, lng: 28.9731 },
+      { t: '19:45', type: 'eat',   name: 'Asmalı Cavit', q: 'Asmalı Cavit, Asmalımescit',                note: 'Meyhane dinner. Reserved. Tünel up from Karaköy.', lat: 41.0296, lng: 28.9742 },
+      { t: '21:45', type: 'eat',   name: 'Mandabatmaz', q: 'Mandabatmaz, Olivya Geçidi',                 note: 'Turkish coffee off İstiklal, then Tünel down and the rooftop.', lat: 41.0318, lng: 28.9762 }
+    ],
+    sun: [
+      { t: '07:45', type: 'eat',   name: 'Karaköy Güllüoğlu', q: 'Karaköy Güllüoğlu',           note: 'Su böreği and tea, two minutes from the hotel.', lat: 41.0233, lng: 28.9772 },
+      { t: '08:30', type: 'move',  name: 'T1 tram to Gülhane', q: 'Gülhane tramvay durağı',          note: 'Three stops from Karaköy.', lat: 41.0127, lng: 28.9810 },
+      { t: '09:00', type: 'sight', name: 'Topkapı Palace', key: 'Topkapı Palace', q: 'Topkapı Sarayı',              note: 'With the Harem. At the gate at opening. About $55.', lat: 41.0115, lng: 28.9834 },
+      { t: '11:15', type: 'move',  name: 'Ferry Eminönü to Kadıköy', q: 'Eminönü Kadıköy iskelesi',    note: '20 minutes across, Istanbulkart.', lat: 41.0177, lng: 28.9726 },
+      { t: '11:50', type: 'eat',   name: 'Kadıköy market', q: 'Güneşlibahçe Sokak, Kadıköy',              note: 'Coffee at Fazıl Bey, stuffed mussels at Midyeci Yasin.', lat: 40.9890, lng: 29.0258 },
+      { t: '12:30', type: 'eat',   name: 'Çiya Sofrası', q: 'Çiya Sofrası, Kadıköy',                note: 'Güneşlibahçe Sokak 43. Point at the pots.', lat: 40.9895, lng: 29.0269 },
+      { t: '13:30', type: 'eat',   name: 'Baylan', q: 'Baylan Pastanesi, Kadıköy',                      note: 'Kup griye at the 1923 patisserie.', lat: 40.9900, lng: 29.0246 },
+      { t: '14:00', type: 'move',  name: 'Ferry Kadıköy to Eminönü', q: 'Kadıköy Eminönü iskelesi',    note: 'To make the 14:40 boat.', lat: 40.9922, lng: 29.0236 },
+      { t: '14:40', type: 'move',  name: 'Short Bosphorus Tour', key: 'Bosphorus Tour', q: 'Şehir Hatları Boğaz Turu iskelesi, Eminönü',        note: 'Şehir Hatları from Eminönü, back 16:35. About $7.', lat: 41.0181, lng: 28.9741 },
+      { t: '16:45', type: 'sight', name: 'Galata Bridge at sunset', key: 'Walk the Galata Bridge', q: 'Galata Köprüsü',     note: 'Lower deck past the fishermen. Galata Tower optional, 7 minutes up.', lat: 41.0206, lng: 28.9734 },
+      { t: '19:30', type: 'eat',   name: 'Ali Ocakbaşı Karaköy', q: 'Ali Ocakbaşı, Kardeşim Sokak, Karaköy',        note: 'Kardeşim Sokak 45. Your Adana. Reserved. Not the waterfront copycat.', lat: 41.0249, lng: 28.9712 }
+    ],
+    mon: [
+      { t: '08:00', type: 'eat',   name: 'Lades Menemen', q: 'Lades Menemen, Beyoğlu',               note: 'Sadri Alışık Sokak off İstiklal. Open from 06:00.', lat: 41.0343, lng: 28.9793 },
+      { t: '09:30', type: 'sight', name: 'Fener and Balat on foot', key: 'Fener and Balat', q: 'Fener Rum Patrikhanesi',     note: 'Patriarchate, Phanar College, Kiremit Caddesi, the Iron Church.', lat: 41.0291, lng: 28.9518 },
+      { t: '11:00', type: 'sight', name: 'Chora, the Kariye Mosque', key: 'Chora', q: 'Kariye Camii',    note: 'Byzantine mosaics. About $22.', lat: 41.0309, lng: 28.9392 },
+      { t: '12:30', type: 'eat',   name: 'Dönerci Şahin Usta', q: 'Dönerci Şahin Usta, Nuruosmaniye',          note: 'Kılıççılar Sokak 7, at the Grand Bazaar\'s Nuruosmaniye gate. Second bazaar pass after, if wanted.', lat: 41.0107, lng: 28.9706 },
+      { t: '13:45', type: 'eat',   name: 'Karaköy Güllüoğlu',           note: 'Box the baklava. Fıstıklı, with kaymak.', lat: 41.0233, lng: 28.9772 },
+      { t: '14:30', type: 'eat',   name: 'Mandabatmaz, or the rooftop', key: 'Mandabatmaz', q: 'Mandabatmaz, Olivya Geçidi', note: 'Last coffee. Istanbul Modern is 3 minutes from the hotel if you want an hour indoors.', lat: 41.0318, lng: 28.9762 },
+      { t: '16:15', type: 'move',  name: 'Metro from Şişhane', q: 'Şişhane metro istasyonu',          note: 'M2 to Gayrettepe, M11 to the airport. About 70 minutes.', lat: 41.0283, lng: 28.9727 },
+      { t: '20:35', type: 'move',  name: 'Istanbul Airport, fly to Karachi', key: 'Istanbul Airport', q: 'İstanbul Havalimanı', note: 'Check-in closes 19:35.', lat: 41.2753, lng: 28.7519, far: true }
+    ]
+  };
+  var LABEL = { sat: 'Sat Jan 2', sun: 'Sun Jan 3', mon: 'Mon Jan 4' };
+  var HREF = { sat: '#d1', sun: '#d2', mon: '#d3' };
+  var DASH = { sat: null, sun: '7 7', mon: '1 7' };
+
+  var map = L.map('leaflet-map', { scrollWheelZoom: false, zoomControl: true });
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', maxZoom: 19
+  }).addTo(map);
+  map.on('click focus', function () { map.scrollWheelZoom.enable(); });
+  map.on('mouseout', function () { map.scrollWheelZoom.disable(); });
+
+  function icon(type, label) {
+    return L.divIcon({ className: '', html: '<span class="pin ' + type + '"><b>' + label + '</b></span>', iconSize: [26, 26], iconAnchor: [13, 13], popupAnchor: [0, -12] });
+  }
+  function gmaps(s) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent((s.q || s.name) + ', Istanbul'); }
+  function amaps(s) { return 'https://maps.apple.com/?q=' + encodeURIComponent(s.q || s.name) + '&sll=' + s.lat + ',' + s.lng + '&z=16'; }
+  function golinks(s) { return '<span class="go"><a href="' + gmaps(s) + '" target="_blank" rel="noopener">Google Maps</a><a href="' + amaps(s) + '" target="_blank" rel="noopener">Apple Maps</a></span>'; }
+  function popup(when, s, href) {
+    return '<span class="when">' + when + '</span><span class="name">' + s.name + '</span>' + s.note + golinks(s) + (href ? '<a class="plan" href="' + href + '">Open in the plan</a>' : '');
+  }
+  // Put the same two links on the matching stop in the day plan and the eat list.
+  function attach(s) {
+    var key = (s.key || s.name).toLowerCase();
+    var hit = function (el) { return el && el.textContent.trim().toLowerCase().indexOf(key) === 0; };
+    document.querySelectorAll('ol.tl li').forEach(function (li) {
+      var strong = li.querySelector('.what > strong');
+      if (hit(strong) && !li.querySelector('.go')) {
+        var span = document.createElement('span'); span.className = 'go';
+        span.innerHTML = golinks(s).replace(/^<span class="go">|<\/span>$/g, '');
+        li.querySelector('.what').appendChild(span);
+      }
+    });
+    document.querySelectorAll('.place h3').forEach(function (h) {
+      if (hit(h) && !h.parentNode.querySelector('.go')) {
+        var span = document.createElement('p'); span.className = 'go';
+        span.innerHTML = golinks(s).replace(/^<span class="go">|<\/span>$/g, '');
+        h.parentNode.appendChild(span);
+      }
+    });
+  }
+
+  var markers = { sat: [], sun: [], mon: [] }, lines = {}, bounds = { all: [] };
+  Object.keys(STOPS).forEach(function (day) {
+    var pts = [];
+    bounds[day] = [];
+    STOPS[day].forEach(function (s, i) {
+      var m = L.marker([s.lat, s.lng], { icon: icon(s.type, i + 1), title: s.name }).addTo(map);
+      m.bindPopup(popup(LABEL[day] + ', ' + s.t, s, HREF[day]));
+      attach(s);
+      markers[day].push(m);
+      if (!s.far) { pts.push([s.lat, s.lng]); bounds[day].push([s.lat, s.lng]); bounds.all.push([s.lat, s.lng]); }
+    });
+    lines[day] = L.polyline(pts, { color: '#1c2419', weight: 2, opacity: 0.55, dashArray: DASH[day], lineJoin: 'round' }).addTo(map);
+  });
+  var hotel = L.marker([HOTEL.lat, HOTEL.lng], { icon: icon('stay', 'B'), title: HOTEL.name, zIndexOffset: 1000 }).addTo(map);
+  hotel.bindPopup(popup('Both nights', HOTEL, HOTEL.href));
+  attach(HOTEL);
+  bounds.all.push([HOTEL.lat, HOTEL.lng]);
+
+  function show(day) {
+    Object.keys(markers).forEach(function (d) {
+      var on = day === 'all' || d === day;
+      markers[d].forEach(function (m) {
+        var el = m.getElement(); if (el) el.classList.toggle('dim', !on);
+        m.setZIndexOffset(on ? 500 : 0);
+      });
+      lines[d].setStyle({ opacity: on ? 0.55 : 0.08 });
+    });
+    map.fitBounds(bounds[day], { padding: [28, 28] });
+    document.querySelectorAll('.chips button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.day === day)); });
+  }
+  document.querySelector('.chips').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (b) show(b.dataset.day);
+  });
+  show('all');
+})();
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+}
+</script>
+</body>
+</html>

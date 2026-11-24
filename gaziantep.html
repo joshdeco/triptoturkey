@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orlando to Karachi, by way of Gaziantep</title>
+<meta name="description" content="A five-day solo food itinerary: Orlando to Istanbul to Gaziantep to Karachi, Jan 1 to 5, 2027.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,0..100&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #eff1ea;
+    --paper-deep: #e3e7d9;
+    --ink: #1c2419;
+    --ink-soft: #4b5546;
+    --pistachio: #3e6b2e;
+    --pistachio-light: #a9c47f;
+    --copper: #b2672f;
+    --copper-deep: #8a4b1d;
+    --sumac: #8f2d3a;
+    --rule: #c9d0bc;
+    --display: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --body: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+    --measure: 66ch;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.5;
+  }
+  a { color: var(--copper-deep); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--copper); outline-offset: 3px; }
+
+  h1, h2, h3 {
+    font-family: var(--display);
+    font-weight: 400;
+    line-height: 1.05;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  h1 { font-size: clamp(2.4rem, 6vw, 4.6rem); font-variation-settings: "opsz" 144, "SOFT" 40; }
+  h2 { font-size: clamp(1.9rem, 3.6vw, 2.7rem); font-variation-settings: "opsz" 72, "SOFT" 30; margin-bottom: 0.6rem; }
+  h3 { font-size: 1.35rem; font-variation-settings: "opsz" 36; }
+  p { margin: 0 0 1em; max-width: var(--measure); }
+  .wrap { width: min(1080px, 100% - 2.5rem); margin-inline: auto; }
+  section { padding: 4.5rem 0; border-top: 1px solid var(--rule); }
+  .lede { font-size: 1.2rem; color: var(--ink-soft); }
+
+  /* hero */
+  header.hero { padding: 3.5rem 0 3rem; }
+  .hero-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; color: var(--ink-soft); }
+  .hero-top strong { color: var(--ink); font-weight: 600; }
+  .hero h1 { max-width: 16ch; margin-bottom: 1.25rem; }
+  .hero h1 em { font-style: italic; font-variation-settings: "opsz" 144, "SOFT" 100; color: var(--pistachio); }
+  .hero .lede { max-width: 52ch; font-size: 1.3rem; }
+
+  /* route rail */
+  .route { list-style: none; margin: 3rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); position: relative; }
+  .route::before {
+    content: ""; position: absolute; left: 6%; right: 6%; top: 11px; height: 0;
+    border-top: 2px dashed var(--copper);
+  }
+  .route li { position: relative; padding: 2rem 0.5rem 0 0; }
+  .route li::before {
+    content: ""; position: absolute; left: 0; top: 3px; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--paper); border: 2px solid var(--copper);
+  }
+  .route li.stay::before { background: var(--pistachio); border-color: var(--pistachio); width: 24px; height: 24px; top: 0; }
+  .route .code { font-family: var(--display); font-size: 2.2rem; line-height: 1; font-variation-settings: "opsz" 72; }
+  .route li.stay .code { color: var(--pistachio); font-size: 2.6rem; }
+  .route .city { display: block; font-weight: 600; margin-top: 0.3rem; }
+  .route .when { display: block; color: var(--ink-soft); font-size: 0.95rem; }
+  @media (max-width: 720px) {
+    .route { grid-template-columns: 1fr; gap: 0; }
+    .route::before { left: 11px; right: auto; top: 1rem; bottom: 1rem; height: auto; border-top: 0; border-left: 2px dashed var(--copper); }
+    .route li { padding: 0.4rem 0 1.4rem 2.6rem; }
+    .route li::before { left: 2px; top: 0.6rem; }
+    .route li.stay::before { left: -1px; top: 0.45rem; }
+  }
+
+  /* sticky day nav */
+  nav.days { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--paper) 92%, white); backdrop-filter: blur(6px); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  nav.days ul { list-style: none; margin: 0; padding: 0.6rem 0; display: flex; gap: 0.4rem; overflow-x: auto; scrollbar-width: none; }
+  nav.days a { display: block; white-space: nowrap; padding: 0.35rem 0.85rem; border-radius: 999px; border: 1px solid var(--rule); text-decoration: none; color: var(--ink); font-weight: 600; font-size: 0.95rem; }
+  nav.days a:hover { border-color: var(--pistachio); }
+  nav.days a.eat { color: var(--copper-deep); }
+
+  /* glance table */
+  table { border-collapse: collapse; width: 100%; font-size: 1rem; }
+  th, td { text-align: left; padding: 0.7rem 0.6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-weight: 600; color: var(--ink-soft); font-size: 0.9rem; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr.total td { font-weight: 600; border-bottom: 2px solid var(--ink); }
+  .table-scroll { overflow-x: auto; }
+
+  /* timeline */
+  .day { margin-top: 3rem; scroll-margin-top: 4rem; }
+  .day-head { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .day-head .date { font-family: var(--display); font-size: 1.1rem; color: var(--ink-soft); font-variation-settings: "opsz" 20; }
+  .day-head .where { color: var(--pistachio); font-weight: 600; }
+  .day-note { color: var(--ink-soft); max-width: var(--measure); margin-bottom: 1.2rem; }
+  ol.tl { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--rule); }
+  ol.tl li { display: grid; grid-template-columns: 5.5rem 1fr; gap: 0.75rem; padding: 0.75rem 0 0.75rem 1.25rem; position: relative; }
+  ol.tl li::before { content: ""; position: absolute; left: -6px; top: 1.25rem; width: 10px; height: 10px; border-radius: 50%; background: var(--rule); }
+  ol.tl li.fly::before { background: var(--ink); }
+  ol.tl li.eat::before { background: var(--copper); }
+  ol.tl .t { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink-soft); }
+  ol.tl .what { max-width: var(--measure); }
+  ol.tl .what strong { font-weight: 600; }
+  ol.tl li.eat .what strong { color: var(--copper-deep); }
+  ol.tl .cost { color: var(--ink-soft); white-space: nowrap; }
+  ol.tl .sub { display: block; color: var(--ink-soft); font-size: 0.95rem; margin-top: 0.15rem; }
+  @media (max-width: 520px) { ol.tl li { grid-template-columns: 1fr; gap: 0.1rem; } }
+
+  /* callouts */
+  .callout { background: var(--paper-deep); border-left: 4px solid var(--copper); padding: 1rem 1.25rem; margin: 1.5rem 0; max-width: calc(var(--measure) + 2.5rem); }
+  .callout.green { border-left-color: var(--pistachio); }
+  .callout.red { border-left-color: var(--sumac); }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* eat list */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem 2rem; margin-top: 1.5rem; }
+  .place h3 { margin-bottom: 0.25rem; }
+  .place .dish { color: var(--copper-deep); font-weight: 600; }
+  .place p { font-size: 0.98rem; margin: 0.3rem 0 0; }
+  .place .hours { color: var(--ink-soft); }
+
+  /* checklist */
+  ul.check { list-style: none; padding: 0; margin: 1rem 0 0; max-width: var(--measure); }
+  ul.check li { display: grid; grid-template-columns: 1.6rem 1fr; gap: 0.6rem; padding: 0.55rem 0; border-bottom: 1px solid var(--rule); align-items: start; }
+  ul.check input { width: 1.2rem; height: 1.2rem; margin-top: 0.25rem; accent-color: var(--pistachio); }
+  ul.check .by { color: var(--ink-soft); font-size: 0.92rem; display: block; }
+
+  footer { padding: 3rem 0 4rem; border-top: 1px solid var(--rule); color: var(--ink-soft); font-size: 0.95rem; }
+  footer p { max-width: var(--measure); }
+
+  @media print {
+    body { font-size: 11.5pt; background: white; }
+    nav.days { display: none; }
+    section { padding: 1.2rem 0; break-inside: avoid; }
+    .day { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-top">
+      <span><strong>Jan 1 to 5, 2027</strong>, landing in Karachi before dawn on Jan 6</span>
+      <span>Solo. Four flights. One city to eat in.</span>
+    </div>
+    <h1>Orlando to Karachi, with three days of <em>eating in Gaziantep</em> in between.</h1>
+    <p class="lede">Istanbul is just the airport on this trip. Gaziantep is Turkey's UNESCO City of Gastronomy, two hours by air from Istanbul, and it is where beyran, küşleme, katmer and the country's best baklava actually come from. You eat there Saturday night through Tuesday lunch, then fly out to Karachi the same evening.</p>
+
+    <ol class="route">
+      <li><span class="code">MCO</span><span class="city">Orlando</span><span class="when">Fri Jan 1, afternoon</span></li>
+      <li><span class="code">IST</span><span class="city">Istanbul</span><span class="when">Sat Jan 2, land 13:45, connect</span></li>
+      <li class="stay"><span class="code">GZT</span><span class="city">Gaziantep</span><span class="when">Sat Jan 2 to Tue Jan 5, 3 nights</span></li>
+      <li><span class="code">IST</span><span class="city">Istanbul</span><span class="when">Tue Jan 5, evening connect</span></li>
+      <li><span class="code">KHI</span><span class="city">Karachi</span><span class="when">Wed Jan 6, land 04:20</span></li>
+    </ol>
+  </div>
+</header>
+
+<nav class="days" aria-label="Jump to a day">
+  <div class="wrap">
+    <ul>
+      <li><a href="#glance">At a glance</a></li>
+      <li><a href="#d1">Day 1 Orlando</a></li>
+      <li><a href="#d2">Day 2 Arrive</a></li>
+      <li><a href="#d3">Day 3 Sunday</a></li>
+      <li><a href="#d4">Day 4 Monday</a></li>
+      <li><a href="#d5">Day 5 Fly out</a></li>
+      <li><a href="#book">Book</a></li>
+      <li><a href="#before">Before you go</a></li>
+      <li><a href="#budget">Budget</a></li>
+      <li><a href="#eats" class="eat">Eat list</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section id="glance">
+  <div class="wrap">
+    <h2>The whole trip in one look</h2>
+    <p class="lede">Every time below is local. Turkey is 8 hours ahead of Orlando, Karachi is 10 hours ahead.</p>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Day</th><th>Wake up in</th><th>The move</th><th>Sleep in</th></tr></thead>
+      <tbody>
+        <tr><td>Fri Jan 1</td><td>Orlando</td><td>Afternoon hop to New York JFK, then Turkish Airlines TK2 at 20:40 to Istanbul</td><td>On the plane</td></tr>
+        <tr><td>Sat Jan 2</td><td>Over Europe</td><td>Land Istanbul 13:45, domestic flight to Gaziantep at 16:05 or 18:15, dinner at İmam Çağdaş</td><td>Gaziantep</td></tr>
+        <tr><td>Sun Jan 3</td><td>Gaziantep</td><td>Katmer at dawn, Zeugma mosaics, kebab lunch, coffee at a 1635 coffeehouse, dinner in a restored han</td><td>Gaziantep</td></tr>
+        <tr><td>Mon Jan 4</td><td>Gaziantep</td><td>Beyran breakfast, spice and copper bazaars, küşleme at Halil Usta, baklava to carry, home-cooking dinner</td><td>Gaziantep</td></tr>
+        <tr><td>Tue Jan 5</td><td>Gaziantep</td><td>Second beyran, last bazaar run, mid-afternoon flight to Istanbul, TK708 at 21:05 to Karachi</td><td>On the plane</td></tr>
+        <tr><td>Wed Jan 6</td><td>Karachi, 04:20</td><td>Done</td><td>Karachi</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section id="days">
+  <div class="wrap">
+    <h2>Day by day</h2>
+    <p class="lede">Copper dots are meals. Black dots are flights. Prices are in US dollars at roughly 50 lira to the dollar, which is where the lira is expected to sit in January.</p>
+
+    <article class="day" id="d1">
+      <div class="day-head"><h3>Day 1, leave Orlando</h3><span class="date">Friday, January 1</span></div>
+      <p class="day-note">New Year's Day. Nothing to do but pack and get to the airport. Shift your sleep an hour or two earlier for the two nights before this so the eastward jump hurts less.</p>
+      <ol class="tl">
+        <li><span class="t">Morning</span><span class="what">Pack light. One carry-on plus a small bag leaves room for a kilo of baklava on the way out. Bring a real winter coat, Gaziantep is near freezing at night.</span></li>
+        <li class="fly"><span class="t">~14:30</span><span class="what"><strong>Orlando to New York JFK</strong>, about 2 h 45 m. <span class="sub">Booked as one Turkish Airlines ticket all the way to Gaziantep, the JFK leg rides on a JetBlue or Delta codeshare and your bag is checked through.</span></span></li>
+        <li class="fly"><span class="t">20:40</span><span class="what"><strong>Turkish Airlines TK2, JFK to Istanbul</strong>, about 10 hours, lands 13:45 Saturday. <span class="sub">Sleep as soon as you board. Dinner service comes fast, then the cabin goes dark.</span></span></li>
+      </ol>
+      <div class="callout">
+        <p>Alternative routing if JFK prices badly: Orlando to Washington Dulles on United, then TK8 at 22:10, landing Istanbul 15:20. That still makes the 18:15 Gaziantep flight.</p>
+      </div>
+    </article>
+
+    <article class="day" id="d2">
+      <div class="day-head"><h3>Day 2, land and keep going</h3><span class="date">Saturday, January 2</span><span class="where">Istanbul airport, then Gaziantep</span></div>
+      <p class="day-note">Don't leave the airport in Istanbul. The city is 45 to 90 minutes each way and you'd get two hours there at most. Save it for a real visit and go eat where the food is from.</p>
+      <ol class="tl">
+        <li class="fly"><span class="t">13:45</span><span class="what"><strong>Land Istanbul.</strong> Passport control, no visa needed on a US passport. Bags stay checked through on a single ticket. Walk to the domestic zone and clear domestic security, 20 minutes on foot.</span></li>
+        <li class="eat"><span class="t">14:45</span><span class="what"><strong>Cuisine Anatolia</strong>, airside near the A and B piers, if you need something. Keep it to soup. Real food is three hours away. <span class="cost">about $10</span></span></li>
+        <li class="fly"><span class="t">16:05</span><span class="what"><strong>Turkish Airlines to Gaziantep</strong>, 1 h 45 m, lands 17:45. <span class="sub">If the booking engine refuses the 2 h 20 m connection, take the 18:15 departure landing 19:55. Either works.</span></span></li>
+        <li><span class="t">18:15</span><span class="what"><strong>Taxi to the old town</strong>, 25 minutes. Check in at Anadolu Evleri or Ali Bey Konağı, both restored Ottoman mansions inside the bazaar quarter. <span class="cost">taxi about $15</span></span></li>
+        <li class="eat"><span class="t">20:00</span><span class="what"><strong>İmam Çağdaş</strong>, in Uzun Çarşı since 1887. Order Ali Nazik, a soğan kebabı, one lahmacun, and finish with their kuru baklava. Big, fast, and one of the few kebab houses that serves dinner. Jet lag will hit hard, eat and go to bed. <span class="cost">about $17</span></span></li>
+      </ol>
+    </article>
+
+    <article class="day" id="d3">
+      <div class="day-head"><h3>Day 3, the slow Sunday</h3><span class="date">Sunday, January 3</span><span class="where">Gaziantep</span></div>
+      <p class="day-note">Sunday is the one day the küşleme master and most bazaar shops close, so this day is museums, coffee, and the places that run seven days.</p>
+      <ol class="tl">
+        <li class="eat"><span class="t">07:30</span><span class="what"><strong>Katmerci Zekeriya Usta</strong>, Bay Hilmi Sokak 16. Classic kaymaklı katmer, pistachio and clotted cream folded into paper-thin dough, with tea. The dough runs out before noon. Backup is Orkide Pastanesi for a full Antep breakfast spread. <span class="cost">about $9</span></span></li>
+        <li><span class="t">10:00</span><span class="what"><strong>Zeugma Mosaic Museum</strong>, the largest mosaic museum in the world and home of the Gypsy Girl. Two hours. Open daily in winter 08:30 to 17:00. <span class="cost">about $13</span></span></li>
+        <li class="eat"><span class="t">12:30</span><span class="what"><strong>Çulcuoğlu Et Lokantası</strong>, Suyabatmaz branch by the Almacı spice market. Starters, patlıcan kebabı (eggplant and minced lamb), sebzeli kebap. Wide menu, open Sundays. <span class="cost">about $15</span></span></li>
+        <li class="eat"><span class="t">15:00</span><span class="what"><strong>Tahmis Kahvesi</strong>, Şehitler Caddesi 25, pouring coffee since 1635. Order menengiç, the terebinth-berry coffee that only exists here, then an Osmanlı kahvesi. <span class="cost">about $4</span></span></li>
+        <li><span class="t">16:00</span><span class="what"><strong>Gaziantep Castle and Hışvahan</strong> at its foot. The castle's quake restoration was declared finished in December 2025 but reopening has slipped, so check locally. The han and the castle-foot lanes are open regardless.</span></li>
+        <li class="eat"><span class="t">17:00</span><span class="what"><strong>Koçak Baklava</strong>, Mücahitler main branch, open to 23:00. Three pieces: fıstıklı, midye, and şöbiyet, with tea. <span class="cost">about $5</span></span></li>
+        <li class="eat"><span class="t">19:30</span><span class="what"><strong>Bayazhan</strong>, a restored 1909 han in Akyol with live music and a wine and rakı list. Mezze, then vişneli damat kebabı (sour-cherry kebab) or lamb over hummus. The splurge dinner. <span class="cost">about $27</span></span></li>
+      </ol>
+    </article>
+
+    <article class="day" id="d4">
+      <div class="day-head"><h3>Day 4, the big eating day</h3><span class="date">Monday, January 4</span><span class="where">Gaziantep</span></div>
+      <p class="day-note">Everything is open. Breakfast is the city's defining dish, lunch is the best kebab in Turkey, and you are carrying baklava home.</p>
+      <ol class="tl">
+        <li class="eat"><span class="t">08:00</span><span class="what"><strong>Metanet Lokantası</strong>, Kozluca Caddesi 11. Beyran: lamb neck simmered twelve hours, rice, garlic and chili broth poured over it at the table, eaten with tırnak pide. Ask for acılı. They open at 05:00 and the pot runs low by 10:00. <span class="cost">about $8</span></span></li>
+        <li><span class="t">09:30</span><span class="what"><strong>Elmacı Pazarı and Bakırcılar Çarşısı</strong>, the 250-year-old spice lane and the coppersmiths' bazaar across from it. Buy pepper paste, Antep pistachios, dried eggplant for dolma. Then the Emine Göğüş Culinary Museum around the corner.</span></li>
+        <li class="eat"><span class="t">11:30</span><span class="what"><strong>Kebapçı Halil Usta</strong>, Karşıyaka, a 10-minute taxi behind the Zeugma museum. Küşleme, the lamb tenderloin that Gaziantep kebab is judged by, plus simit kebabı, kaşık salatası and ayran. Lunch only, shutters when the meat runs out, be seated by 12:30. <span class="cost">about $12</span></span></li>
+        <li class="eat"><span class="t">15:00</span><span class="what"><strong>Elmacıpazarı Güllüoğlu</strong>, the original Güllüoğlu inside the spice market. Eat şöbiyet and sütlü nuriye here, then have a kilo boxed for travel. Koçak and İmam Çağdaş pack for flights too. <span class="cost">about $5 to eat, $42 for the kilo</span></span></li>
+        <li class="eat"><span class="t">19:30</span><span class="what"><strong>Yesemek Gaziantep Mutfağı</strong>, Şekeroğlu. The home-cooking side of the city you can't get anywhere else: yuvalama (tiny chickpea-lamb dumplings in yogurt), içli köfte, ekşili ufak köfte. Open until 21:00. <span class="cost">about $9</span></span></li>
+      </ol>
+      <div class="callout green">
+        <p>If you'd rather trade this day for a road trip: Şanlıurfa is 2 hours east by bus. Lamb-liver dürüm for breakfast at Ciğerci Aziz Usta, Göbeklitepe, then a sıra gecesi night of music and çiğ köfte for about $40. Return on the 07:00 bus Tuesday for a last Gaziantep lunch. Adana and Antakya each burn most of a day in transit and Antakya's food scene is still mostly in prefab stalls after the 2023 quake.</p>
+      </div>
+    </article>
+
+    <article class="day" id="d5">
+      <div class="day-head"><h3>Day 5, out through Istanbul</h3><span class="date">Tuesday, January 5</span><span class="where">Gaziantep to Istanbul to Karachi</span></div>
+      <p class="day-note">Book Gaziantep to Karachi as one Turkish Airlines ticket. Your bag checks through to Karachi and the booking engine will only sell you a connection that works.</p>
+      <ol class="tl">
+        <li class="eat"><span class="t">08:00</span><span class="what"><strong>Sakıp Usta or Kelebek Paça Beyran</strong>, Alleben. Beyran round two, to compare with Metanet. Or Orkide Pastanesi for breakfast and a dondurmalı katmer, katmer with ice cream. <span class="cost">about $8</span></span></li>
+        <li><span class="t">10:00</span><span class="what"><strong>Last bazaar run</strong> for anything you forgot, then pack. Baklava goes in the carry-on, flat.</span></li>
+        <li class="eat"><span class="t">12:00</span><span class="what"><strong>Üçler Kebap</strong>, Sarıgüllük. A soğanlı and a sarımsaklı lahmacun, light enough to still want airplane dinner. <span class="cost">about $4</span></span></li>
+        <li><span class="t">13:00</span><span class="what"><strong>Check out, taxi to the airport</strong>, 25 minutes. <span class="cost">about $15</span></span></li>
+        <li class="fly"><span class="t">~15:00</span><span class="what"><strong>Turkish Airlines, Gaziantep to Istanbul</strong>, 1 h 50 m, landing around 17:00. <span class="sub">Exact departure depends on what Turkish sells against TK708 that day; expect a mid-afternoon flight and a 3 to 4 hour layover.</span></span></li>
+        <li><span class="t">17:00</span><span class="what"><strong>Istanbul transfer.</strong> Walk from domestic arrivals to the international zone, exit passport control, security re-screen. Allow 90 minutes minimum, you'll have more. The iGA Lounge sells 3-hour passes for about $60 if you want a shower and a quiet seat. Turkish's own lounges don't sell day passes.</span></li>
+        <li class="fly"><span class="t">21:05</span><span class="what"><strong>Turkish Airlines TK708, Istanbul to Karachi</strong>, Airbus A330, 5 h 15 m. Lands Jinnah International at 04:20 Wednesday, January 6.</span></li>
+      </ol>
+      <div class="callout red">
+        <p>TK708 runs most days but not every day, and the sources disagree on which day it skips in the winter schedule. Confirm it operates Tuesday, January 5 before you book the hotel. If it doesn't, Pegasus PC130 leaves Sabiha Gökçen around 20:00 nightly, but that's a separate ticket from a different airport.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="book">
+  <div class="wrap">
+    <h2>What to book, and roughly what it costs</h2>
+    <p class="lede">Fares are route averages from October 2026, not live quotes for your dates. January is the cheapest month to fly to Istanbul, but a January 1 departure carries a holiday premium. Book the two Turkish tickets now.</p>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Ticket</th><th>What to search</th><th class="num">Economy</th><th class="num">Business</th></tr></thead>
+      <tbody>
+        <tr><td>Ticket 1</td><td>Turkish Airlines, Orlando to Gaziantep, one way, Jan 1. It will route you MCO, JFK or IAD, IST, GZT on one record. There is no Orlando nonstop yet, Turkish has said one is "coming" with no date.</td><td class="num">$750 to 1,150</td><td class="num">$2,500 to 3,500</td></tr>
+        <tr><td>Ticket 2</td><td>Turkish Airlines, Gaziantep to Karachi, one way, Jan 5. One record through Istanbul onto TK708.</td><td class="num">$300 to 450</td><td class="num">$1,100 to 1,600</td></tr>
+        <tr><td>Hotel</td><td>Ali Bey Konağı, restored mansion with a famous Antep breakfast, best value. Or Anadolu Evleri, the most atmospheric, inside the bazaar. 3 nights, Jan 2 to 5.</td><td class="num">$190 to 280</td><td class="num">$260 to 410</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout">
+      <p>Why two tickets instead of one: Orlando to Karachi with a 3-day stopover in a Turkish domestic city doesn't price as a single itinerary on Turkish's site. Two one-ways are cleaner, and each one is still a single protected connection through Istanbul.</p>
+    </div>
+  </div>
+</section>
+
+<section id="before">
+  <div class="wrap">
+    <h2>Before you go</h2>
+    <p class="lede">The Pakistan visa is the only item with a real deadline. Everything else is a week-of job.</p>
+    <ul class="check">
+      <li><input type="checkbox" id="c1"><label for="c1"><strong>Pakistan e-visa.</strong> Apply at visa.nadra.gov.pk by December 1. Standard processing is 7 to 10 working days, longer over the holidays. Single-entry tourist is reported at about $60 for US passports, confirm on the portal. The free visa-on-arrival that existed in 2025 was suspended January 2026. If you hold a valid NICOP or Pakistan Origin Card you skip this entirely, but an expired card now gets you denied boarding under the July 2026 rule, so check the date on it today.<span class="by">By Dec 1</span></label></li>
+      <li><input type="checkbox" id="c2"><label for="c2"><strong>Turkey visa: none needed on a US passport.</strong> The $50 e-visa for Americans was abolished in December 2023. Ignore any site still selling it. If you'd be traveling on a Pakistani passport instead, you do need a Turkey e-visa, because the domestic flight means you clear immigration in Istanbul. A valid US visa or green card unlocks the online version.<span class="by">Nothing to do, unless on a Pakistani passport</span></label></li>
+      <li><input type="checkbox" id="c3"><label for="c3"><strong>Passport valid past July 2027.</strong> Turkey wants 60 days beyond the stay, Pakistan wants 6 months, airlines apply the stricter one.<span class="by">Check now</span></label></li>
+      <li><input type="checkbox" id="c4"><label for="c4"><strong>Confirm TK708 flies on Tuesday Jan 5</strong> on turkishairlines.com before locking the hotel.<span class="by">Now</span></label></li>
+      <li><input type="checkbox" id="c5"><label for="c5"><strong>Book both Turkish tickets and the hotel.</strong><span class="by">October</span></label></li>
+      <li><input type="checkbox" id="c6"><label for="c6"><strong>Install an eSIM before landing.</strong> Airalo's 7-day unlimited Turkey plan on Türk Telekom is about $25. Buy and install it from home, some eSIM storefronts are blocked inside Turkey. Any unlocked US phone works.<span class="by">Dec 28</span></label></li>
+      <li><input type="checkbox" id="c7"><label for="c7"><strong>Cash plan.</strong> Cards work almost everywhere in Istanbul, but Gaziantep bazaars, beyran houses and baklava shops are often cash only. Pull lira from a Ziraat or Halkbank ATM at the airport, always decline the ATM's own conversion rate. Tip 10 to 15 percent in cash at sit-down places.<span class="by">On arrival</span></label></li>
+      <li><input type="checkbox" id="c8"><label for="c8"><strong>Offline maps and Turkish in Google Translate.</strong> Download Gaziantep in Google Maps. English is thin outside hotels.<span class="by">Dec 28</span></label></li>
+      <li><input type="checkbox" id="c9"><label for="c9"><strong>Call ahead on the two breakfast places</strong> since you're arriving right after a holiday. Metanet +90 342 231 46 66, Zekeriya Usta +90 342 230 09 71.<span class="by">Jan 2</span></label></li>
+      <li><input type="checkbox" id="c10"><label for="c10"><strong>Pack for cold.</strong> Early January in Gaziantep: highs around 8°C, lows near 0, rain on a third of days, snow possible. Proper coat, closed shoes, a layer for the drafty stone hans.<span class="by">Dec 31</span></label></li>
+    </ul>
+    <div class="callout green">
+      <p>Safety, plainly: Gaziantep city is routinely visited and treated as safe. The US advisory is Level 2 for Turkey with a do-not-travel zone along the Syrian border 60 km south. Stay in the city, skip the Kilis direction, and it's quieter than Istanbul. Solo dining is the norm here, most lokantas have counter seats.</p>
+    </div>
+  </div>
+</section>
+
+<section id="budget">
+  <div class="wrap">
+    <h2>Budget</h2>
+    <p class="lede">Economy flights, the mid-range mansion hotel, and eating everything on this page.</p>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Item</th><th class="num">Low</th><th class="num">High</th></tr></thead>
+      <tbody>
+        <tr><td>Orlando to Gaziantep, Turkish Airlines, one way economy</td><td class="num">$750</td><td class="num">$1,150</td></tr>
+        <tr><td>Gaziantep to Karachi, Turkish Airlines, one way economy</td><td class="num">$300</td><td class="num">$450</td></tr>
+        <tr><td>Hotel, 3 nights, restored mansion with breakfast</td><td class="num">$190</td><td class="num">$410</td></tr>
+        <tr><td>Food, every meal on this page, Saturday dinner to Tuesday lunch</td><td class="num">$130</td><td class="num">$180</td></tr>
+        <tr><td>Baklava to carry to Karachi, 1 kg</td><td class="num">$42</td><td class="num">$48</td></tr>
+        <tr><td>Museum, coffee, taxis, bazaar shopping</td><td class="num">$80</td><td class="num">$140</td></tr>
+        <tr><td>Pakistan e-visa, if needed</td><td class="num">$60</td><td class="num">$60</td></tr>
+        <tr><td>eSIM, 7 days</td><td class="num">$25</td><td class="num">$25</td></tr>
+        <tr><td>Istanbul lounge pass on the way out, optional</td><td class="num">$0</td><td class="num">$60</td></tr>
+        <tr class="total"><td>Total</td><td class="num">$1,580</td><td class="num">$2,520</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="margin-top:1rem">Business class on both Turkish tickets adds roughly $3,000 to 4,500. The flat bed on the 10-hour JFK leg is the one that pays off, since you land at 13:45 and keep moving.</p>
+  </div>
+</section>
+
+<section id="eats">
+  <div class="wrap">
+    <h2>The eat list</h2>
+    <p class="lede">Every place on the itinerary, with the hour that matters. Gaziantep's best kebab is a lunch thing and its best breakfasts are over by mid-morning. Plan the day around that and nothing else.</p>
+    <div class="grid">
+      <div class="place"><h3>Metanet Lokantası</h3><span class="dish">Beyran</span><p>Kozluca Caddesi 11. The beyran house. Lamb neck broth, rice, garlic, chili.</p><p class="hours">Opens 05:00, go before 10:00. About $8.</p></div>
+      <div class="place"><h3>Kebapçı Halil Usta</h3><span class="dish">Küşleme, simit kebabı</span><p>Karşıyaka, behind the Zeugma museum. The kebab Gaziantep is judged by.</p><p class="hours">Lunch only, 11:00 until the meat runs out. Closed Sunday. About $12.</p></div>
+      <div class="place"><h3>Katmerci Zekeriya Usta</h3><span class="dish">Katmer</span><p>Bay Hilmi Sokak 16. Pistachio, clotted cream, paper-thin dough.</p><p class="hours">From about 06:30, gone by noon. Reported closed some Fridays and Saturdays, so Sunday is the safe day. About $9.</p></div>
+      <div class="place"><h3>İmam Çağdaş</h3><span class="dish">Ali Nazik, lahmacun, baklava</span><p>Uzun Çarşı, since 1887. The one kebab house that does lunch and dinner.</p><p class="hours">All day. About $17 for a full meal.</p></div>
+      <div class="place"><h3>Çulcuoğlu Et Lokantası</h3><span class="dish">Patlıcan kebabı, sebzeli kebap</span><p>Suyabatmaz branch beside the Almacı spice market. Fast, wide menu.</p><p class="hours">Lunch and dinner, open Sundays. About $15.</p></div>
+      <div class="place"><h3>Yesemek Gaziantep Mutfağı</h3><span class="dish">Yuvalama, içli köfte</span><p>Şekeroğlu. Home cooking you can't get in a kebab house.</p><p class="hours">10:30 to 21:00. About $9.</p></div>
+      <div class="place"><h3>Bayazhan</h3><span class="dish">Vişneli damat kebabı, mezze</span><p>Akyol, a restored 1909 han with live music and a drinks list.</p><p class="hours">11:00 to 01:00. About $27.</p></div>
+      <div class="place"><h3>Koçak Baklava</h3><span class="dish">Fıstıklı, midye, şöbiyet</span><p>Mücahitler main branch. Standard-setting pistachio baklava.</p><p class="hours">07:00 to 23:00. About $5 a plate, $45 a kilo.</p></div>
+      <div class="place"><h3>Elmacıpazarı Güllüoğlu</h3><span class="dish">Şöbiyet, sütlü nuriye</span><p>Inside the spice market, the original Güllüoğlu. Packs for flights.</p><p class="hours">Bazaar hours, Monday to Saturday. About $42 a kilo.</p></div>
+      <div class="place"><h3>Tahmis Kahvesi</h3><span class="dish">Menengiç coffee</span><p>Şehitler Caddesi 25, since 1635. Terebinth-berry coffee you can only get here.</p><p class="hours">08:00 to 23:45. About $4.</p></div>
+      <div class="place"><h3>Orkide Pastanesi</h3><span class="dish">Antep breakfast, dondurmalı katmer</span><p>Değirmiçem. The backup breakfast and the katmer-with-ice-cream place.</p><p class="hours">Morning onward. About $10.</p></div>
+      <div class="place"><h3>Üçler Kebap</h3><span class="dish">Lahmacun</span><p>Sarıgüllük. Soğanlı and sarımsaklı lahmacun, the light last lunch.</p><p class="hours">Lunch and dinner. About $2 to 4 each.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Researched October 12, 2026 from Turkish Airlines schedules, Istanbul airport transfer guides, the Turkish foreign ministry visa page, Pakistan visa reporting, and 2025 to 2026 restaurant listings and reviews for Gaziantep. Lira prices move fast with Turkish inflation near 30 percent, dollar figures should hold. Re-check flight days, the castle reopening, and the Pakistan e-visa fee two weeks before departure.</p>
+  </div>
+</footer>
+
+</body>
+</html>
