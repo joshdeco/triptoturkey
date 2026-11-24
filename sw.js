@@ -1,5 +1,5 @@
 /* Offline cache for the Istanbul itinerary. Bump VERSION when the plan changes. */
-const VERSION = 'ist-v1';
+const VERSION = 'ist-v2';
 const SHELL = ['./', './index.html', './gaziantep.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-180.png'];
 
 self.addEventListener('install', (e) => {
